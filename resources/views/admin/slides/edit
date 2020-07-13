@@ -1,0 +1,169 @@
+@extends('layouts.backend')
+
+@section('content')
+<div id="main-content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-5 col-md-8 col-sm-12">
+                    <h2>Edit</h2>
+                </div>
+                <div class="col-lg-7 col-md-4 col-sm-12 text-right">
+                    <ul class="breadcrumb justify-content-end">
+                        <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="icon-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('slides') }}">Slides</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                    <h2>Edti Slide: {{ $slide->title }}</h2>
+                    </div>
+                    @include('admin.includes.errors')
+                    <div class="body">
+                    <form id="basic-form" action="{{ route('slide.update', $slide->id) }}" method="post" enctype="multipart/form-data" novalidate>
+                            {{ csrf_field() }}
+
+                            <div class="form-group">
+                                <div class="form-group">
+                                        <div class="form-group">
+                                            <label>Title</label>
+                                            <div class="row clearfix">
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="inputGroup-sizing-default"><img src="{{ asset('assets/images/en.png') }}"></span>
+                                                    </div>
+                                                    <input type="text" name="title" class="form-control" value="{{ $slide->title }}" required>
+                                                </div>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="inputGroup-sizing-default"><img src="{{ asset('assets/images/fr.png') }}"></span>
+                                                    </div>
+                                                    <input type="text" name="titlefr" class="form-control" value="{{ $slide->titlefr }}" required>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="col-lg-4 col-md-12">
+                                                <label>Select a Orientation Title</label>
+                                                <div class="multiselect_div">
+                                                    <select id="slidetitle" name="slidetitle_id" class="multiselect multiselect-custom">
+                                                    @foreach ($slidetitles as $slidetitle)
+                                                        <option value="{{ $slidetitle->id }}"
+                                                            @if ($slide->slidetitle->id == $slidetitle->id)
+                                                                selected
+                                                            @endif>{{ $slidetitle->title }}</option>
+                                                    @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </div>
+                                        <br>
+
+                                        <div class="form-group">
+                                            <label>Info</label>
+                                            <div class="row clearfix">
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="inputGroup-sizing-default"><img src="{{ asset('assets/images/en.png') }}"></span>
+                                                    </div>
+                                                    <input type="text" name="info" class="form-control" value="{{ $slide->info }}" required>
+                                                </div>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="inputGroup-sizing-default"><img src="{{ asset('assets/images/fr.png') }}"></span>
+                                                    </div>
+                                                    <input type="text" name="infofr" class="form-control" value="{{ $slide->infofr }}" required>
+                                                </div>
+                                            </div>
+                                            <br>
+
+                                            <div class="col-lg-4 col-md-12">
+                                                <label>Select a orientation Info</label>
+                                                <div class="multiselect_div">
+                                                    <select id="slideinfo" name="slideinfo_id" class="multiselect multiselect-custom">
+                                                    @foreach ($slideinfos as $slideinfo)
+                                                        <option value="{{ $slideinfo->id }}"
+                                                            @if ($slide->slideinfo->id == $slideinfo->id)
+                                                             selected
+                                                            @endif>{{ $slideinfo->title }}</option>
+                                                    @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <br><br><br>
+                                        <div class="col-lg-4 col-md-12">
+                                            <label>Select a transition</label>
+                                            <div class="multiselect_div">
+                                                <select id="transition" name="transition_id" class="multiselect multiselect-custom">
+                                                    @foreach ($transitions as $transition)
+                                                        <option value="{{ $transition->id }}"
+                                                            @if ($slide->transition->id == $transition->id)
+                                                                selected
+                                                            @endif
+                                                        >{{ $transition->title }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <p id="error-multiselect"></p>
+                                        </div>
+                                        <br>
+
+                                        <label>Photo</label>
+                                        <input type="file" name="photo" class="form-control" value="{{ $slide->photo }}">
+                                        <span class="help-block">IMAGE RESOLUTION !!! :::: 1920 X 500</span>
+                            </div>
+
+                            <br>
+                            <br><br>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">update slide</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+
+@section('style')
+    <script src="assets/bundles/libscripts.bundle.js"></script>
+@endsection
+
+@section('script')
+    <script>
+        $(function() {
+            // validation needs name of the element
+            $('#transition').multiselect();
+            $('#slidetitle').multiselect();
+            $('#slideinfo').multiselect();
+
+            // initialize after multiselect
+            $('#basic-form').parsley();
+        });
+    </script>
+
+    <script src="{{asset('assets/vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js')}}"></script> <!-- Bootstrap Colorpicker Js -->
+    <script src="{{asset('assets/vendor/jquery-inputmask/jquery.inputmask.bundle.js')}}"></script> <!-- Input Mask Plugin Js -->
+    <script src="{{asset('assets/vendor/jquery.maskedinput/jquery.maskedinput.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/multi-select/js/jquery.multi-select.js')}}"></script> <!-- Multi Select Plugin Js -->
+    <script src="{{asset('assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js')}}"></script>
+    <script src="{{asset('assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.js')}}"></script> <!-- Bootstrap Tags Input Plugin Js -->
+    <script src="{{asset('assets/vendor/nouislider/nouislider.js')}}"></script> <!-- noUISlider Plugin Js -->
+
+    <script src="{{asset('assets/bundles/mainscripts.bundle.js')}}"></script>
+    <script src="{{asset('assets/bundles/morrisscripts.bundle.js')}}"></script>
+    <script src="{{asset('assets/js/pages/forms/advanced-form-elements.js')}}"></script>
+@endsection
